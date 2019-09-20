@@ -86,21 +86,28 @@ app.post('/api/persons', (request, response) => {
   const body = request.body
   console.log('IN', body)
 
-  if (!body.name && !body.number) {
+  if (!body.name || !body.number) {
     return response.status(400).json({ 
-      error: 'please fill all required information' 
+      error: 'Please fill all required information' 
     })
   }
 
-  const person = {
-    name: body.name,
-    number: body.number,
-    id: generateId(),
+  if (persons.find( ({ name }) => name === body.name )) {
+    return response.status(400).json({ 
+      error: 'Name must be unique' 
+    })
   }
+  else {
+    const person = {
+      name: body.name,
+      number: body.number,
+      id: generateId(),
+    }
 
-  persons = persons.concat(person)
+    persons = persons.concat(person)
 
-  response.json(person)
+    response.json(person)
+  }
 })
 
 const PORT = 3001
