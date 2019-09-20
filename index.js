@@ -5,8 +5,20 @@ const morgan = require('morgan')
 
 app.use(bodyParser.json())
 
+morgan.token('body', function getBody (req) {
+  let body = JSON.stringify(req.body)
+  return body
+})
+
 // create "middleware", console log data
-app.use(morgan('tiny', { stream: console.log() }))
+// Different format if method is POST
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body', 
+  { skip: (req) => { return req.method !== 'POST' }},
+  { stream: console.log() }
+))
+app.use(morgan('tiny', {
+  skip: (req) => { return req.method === 'POST' }
+}))
 
 let persons = [
   { 
@@ -89,6 +101,7 @@ const generateId = () => {
 app.post('/api/persons', (request, response) => {
   const body = request.body
   console.log('IN', body)
+  console.log('REQ', request.method)
 
   if (!body.name || !body.number) {
     return response.status(400).json({ 
