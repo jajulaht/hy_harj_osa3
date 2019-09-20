@@ -1,5 +1,8 @@
 const express = require('express')
 const app = express()
+const bodyParser = require('body-parser')
+
+app.use(bodyParser.json())
 
 let persons = [
   { 
@@ -68,6 +71,36 @@ app.delete('/api/persons/:id', (request, response) => {
   persons = persons.filter(person => person.id !== id)
 
   response.status(204).end()
+})
+
+// Generating id
+const generateId = () => {
+  min = Math.ceil(0)
+  max = Math.floor(100000)
+  //The maximum is inclusive and the minimum is inclusive
+  return Math.floor(Math.random() * (max - min + 1)) + min; 
+}
+
+// Adding new contact info
+app.post('/api/persons', (request, response) => {
+  const body = request.body
+  console.log('IN', body)
+
+  if (!body.name && !body.number) {
+    return response.status(400).json({ 
+      error: 'please fill all required information' 
+    })
+  }
+
+  const person = {
+    name: body.name,
+    number: body.number,
+    id: generateId(),
+  }
+
+  persons = persons.concat(person)
+
+  response.json(person)
 })
 
 const PORT = 3001
