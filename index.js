@@ -29,12 +29,12 @@ let persons = [
   }
 ]
 
-// Root
+// Route for root
 app.get('/', (req, res) => {
   res.send('<h1>Hello World!</h1>')
 })
 
-// Info
+// Route for info
 app.get('/info', (req, res) => {
   let info = persons.length
   let now = new Date()
@@ -43,8 +43,22 @@ app.get('/info', (req, res) => {
           )
 })
 
+// Route for all persons
 app.get('/api/persons', (req, res) => {
   res.json(persons)
+})
+
+// Route for individual person
+// Returns 404 if no person with that id
+app.get('/api/persons/:id', (request, response) => {
+  const id = Number(request.params.id)
+  const person = persons.find(person => person.id === id)
+  
+  if (person) {
+    response.json(person)
+  } else {
+    response.status(404).end()
+  }
 })
 
 const PORT = 3001
