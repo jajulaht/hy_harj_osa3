@@ -1,8 +1,12 @@
 const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
+const morgan = require('morgan')
 
 app.use(bodyParser.json())
+
+// create "middleware", console log data
+app.use(morgan('tiny', { stream: console.log() }))
 
 let persons = [
   { 
