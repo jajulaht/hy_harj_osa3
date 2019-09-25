@@ -26,34 +26,6 @@ app.use(morgan('tiny', {
   skip: (req) => { return req.method === 'POST' }
 }))
 
-// let persons = [
-//   { 
-//     "name": "Arto Hellas", 
-//     "number": "040-123456",
-//     "id": 1
-//   },
-//   { 
-//     "name": "Ada Lovelace", 
-//     "number": "39-44-5323523",
-//     "id": 2
-//   },
-//   { 
-//     "name": "Dan Abramov", 
-//     "number": "12-43-234345",
-//     "id": 3
-//   },
-//   { 
-//     "name": "Mary Poppendieck", 
-//     "number": "39-23-6423122",
-//     "id": 4
-//   },
-//   { 
-//     "name": "Risto Reipas", 
-//     "number": "050-6423122",
-//     "id": 5
-//   }
-// ]
-
 // Route for root
 app.get('/', (req, res) => {
   res.send('<h1>Hello World!</h1>')
@@ -97,13 +69,6 @@ app.delete('/api/persons/:id', (request, response) => {
   response.status(204).end()
 })
 
-// Generating id
-const generateId = () => {
-  min = Math.ceil(0)
-  max = Math.floor(100000)
-  //The maximum is inclusive and the minimum is inclusive
-  return Math.floor(Math.random() * (max - min + 1)) + min; 
-}
 
 // Adding new contact info
 app.post('/api/persons', (request, response) => {
@@ -117,22 +82,14 @@ app.post('/api/persons', (request, response) => {
     })
   }
 
-  if (persons.find( ({ name }) => name === body.name )) {
-    return response.status(400).json({ 
-      error: 'Name must be unique' 
-    })
-  }
-  else {
-    const person = {
-      name: body.name,
-      number: body.number,
-      id: generateId(),
-    }
+  const person = new Person({
+    name: body.name,
+    number: body.number
+  })
 
-    persons = persons.concat(person)
-
-    response.json(person)
-  }
+  person.save().then(savedPerson => {
+    response.json(savedPerson.toJSON())
+  })
 })
 
 const PORT = process.env.PORT
