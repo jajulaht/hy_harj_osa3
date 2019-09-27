@@ -78,20 +78,40 @@ app.post('/api/persons', (request, response) => {
   console.log('IN', body)
   console.log('REQ', request.method)
 
-  if (!body.name || !body.number) {
-    return response.status(400).json({ 
-      error: 'Please fill all required information' 
-    })
+  // Empty fields
+  if (body.name === '' || body.number === '') {
+    return response.status(400).json({ error: 'content missing' })
   }
 
+  // Default fields
+  if (body.name === 'Add a new name...' || body.number === 'Add a new number...') {
+    return
+  }
+
+  // Create new contact
   const person = new Person({
     name: body.name,
     number: body.number
   })
-
   person.save().then(savedPerson => {
     response.json(savedPerson.toJSON())
   })
+})
+
+// Changing the number of contact
+app.put('/api/persons/:id', (request, response, next) => {
+  const body = request.body
+
+  const person = {
+    name: body.name,
+    number: body.number
+  }
+
+  Person.findByIdAndUpdate(request.params.id, person, { new: true })
+    .then(updatedPerson => {
+      response.json(updatedPerson.toJSON())
+    })
+    .catch(error => next(error))
 })
 
 // Handler for unknown routes

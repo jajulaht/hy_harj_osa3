@@ -1,6 +1,10 @@
 const mongoose = require('mongoose')
 const ObjectId = mongoose.Schema.Types.ObjectId;
 
+// Make Mongoose use `findOneAndUpdate()`. Note that this option is `true`
+// by default, you need to set it to false. (From Stackoverflow)
+mongoose.set('useFindAndModify', false)
+
 const url = process.env.MONGODB_URI
 console.log('connecting to', url)
 
