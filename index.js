@@ -32,12 +32,14 @@ app.get('/', (req, res) => {
 })
 
 // Route for info
-app.get('/info', (req, res) => {
-  let info = persons.length
-  let now = new Date()
-  res.send(`<p>Phone book has info for ${info} people</p>
-            <p>${now}</p>`
-          )
+app.get('/info', (request, response) => {
+  Person.find({}).then(persons => {
+    let info = persons.length
+    let now = new Date()
+    response.send(`<p>Phone book has info for ${info} people</p>
+              <p>${now}</p>`
+            )
+  })
 })
 
 // Route for all persons
