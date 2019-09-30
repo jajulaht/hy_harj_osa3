@@ -1,5 +1,7 @@
 const mongoose = require('mongoose')
-const ObjectId = mongoose.Schema.Types.ObjectId;
+mongoose.set('useCreateIndex', true)
+const ObjectId = mongoose.Schema.Types.ObjectId
+const uniqueValidator = require('mongoose-unique-validator')
 
 // Make Mongoose use `findOneAndUpdate()`. Note that this option is `true`
 // by default, you need to set it to false. (From Stackoverflow)
@@ -19,10 +21,13 @@ mongoose.connect(url, { useUnifiedTopology: true, useNewUrlParser: true })
 
 // Schema for the contact info
 const contactSchema = new mongoose.Schema({
-  name: String,
-  number: String,
+  name: { type: String, required: true, unique: true },
+  number: { type: String, required: true, unique: true },
   id: ObjectId,
 })
+
+// Apply the uniqueValidator plugin to contactSchema
+contactSchema.plugin(uniqueValidator)
 
 // Transform returned contact infos
 contactSchema.set('toJSON', {

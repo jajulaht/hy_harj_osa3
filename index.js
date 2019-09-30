@@ -75,7 +75,7 @@ app.delete('/api/persons/:id', (request, response, next) => {
 
 
 // Adding new contact info
-app.post('/api/persons', (request, response) => {
+app.post('/api/persons', (request, response, next) => {
   const body = request.body
   console.log('IN', body)
   console.log('REQ', request.method)
@@ -98,7 +98,9 @@ app.post('/api/persons', (request, response) => {
   person.save().then(savedPerson => {
     response.json(savedPerson.toJSON())
   })
+  .catch(error => next(error))
 })
+
 
 // Changing the number of contact
 app.put('/api/persons/:id', (request, response, next) => {
@@ -130,8 +132,9 @@ const errorHandler = (error, request, response, next) => {
 
   if (error.name === 'CastError' && error.kind == 'ObjectId') {
     return response.status(400).send({ error: 'malformatted id' })
-  } 
-
+  } else if (error.name === 'ValidationError') {
+    return response.status(400).json({ error: error.message })
+  }
   next(error)
 }
 
