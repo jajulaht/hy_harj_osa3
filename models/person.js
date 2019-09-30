@@ -21,8 +21,8 @@ mongoose.connect(url, { useUnifiedTopology: true, useNewUrlParser: true })
 
 // Schema for the contact info
 const contactSchema = new mongoose.Schema({
-  name: { type: String, required: true, unique: true },
-  number: { type: String, required: true, unique: true },
+  name: { type: String, required: true, unique: true, minlength: 3 },
+  number: { type: String, required: true, unique: true, minlength: 8 },
   id: ObjectId,
 })
 
