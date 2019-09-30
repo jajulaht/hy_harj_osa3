@@ -12,6 +12,7 @@ console.log('connecting to', url)
 
 
 mongoose.connect(url, { useUnifiedTopology: true, useNewUrlParser: true })
+  // eslint-disable-next-line no-unused-vars
   .then(result => {
     console.log('connected to MongoDB')
   })

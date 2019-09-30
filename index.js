@@ -18,8 +18,8 @@ morgan.token('body', function getBody (req) {
 
 // create "middleware", console log data
 // Different format if method is POST
-app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body', 
-  { skip: (req) => { return req.method !== 'POST' }},
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body',
+  { skip: (req) => { return req.method !== 'POST' } },
   { stream: console.log() }
 ))
 app.use(morgan('tiny', {
@@ -37,8 +37,7 @@ app.get('/info', (request, response) => {
     let info = persons.length
     let now = new Date()
     response.send(`<p>Phone book has info for ${info} people</p>
-              <p>${now}</p>`
-            )
+              <p>${now}</p>`)
   })
 })
 
@@ -67,6 +66,7 @@ app.get('/api/persons/:id', (request, response, next) => {
 // Notice the conversion from string to number
 app.delete('/api/persons/:id', (request, response, next) => {
   Person.findByIdAndRemove(request.params.id)
+    // eslint-disable-next-line no-unused-vars
     .then(result => {
       response.status(204).end()
     })
@@ -100,8 +100,8 @@ app.post('/api/persons', (request, response, next) => {
     .then(savedPerson => savedPerson.toJSON())
     .then(savedAndFormattedPerson => {
       response.json(savedAndFormattedPerson)
-    }) 
-  .catch(error => next(error))
+    })
+    .catch(error => next(error))
 })
 
 
@@ -133,7 +133,7 @@ app.use(unknownEndpoint)
 const errorHandler = (error, request, response, next) => {
   console.error(error.message)
 
-  if (error.name === 'CastError' && error.kind == 'ObjectId') {
+  if (error.name === 'CastError' && error.kind === 'ObjectId') {
     return response.status(400).send({ error: 'malformatted id' })
   } else if (error.name === 'ValidationError') {
     return response.status(400).json({ error: error.message })

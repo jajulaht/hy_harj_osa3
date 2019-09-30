@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-var ObjectId = mongoose.Schema.Types.ObjectId;
+var ObjectId = mongoose.Schema.Types.ObjectId
 
 // If password is not given
 if ( process.argv.length<3 ) {
@@ -25,7 +25,7 @@ const contactSchema = new mongoose.Schema({
 
 const Person = mongoose.model('Person', contactSchema)
 
-// Two ways of calling the app, 
+// Two ways of calling the app,
 // first lists contacts, second adds a contact
 if ( process.argv.length === 3 ) {
   Person.find({}).then(result => {
@@ -37,14 +37,15 @@ if ( process.argv.length === 3 ) {
   })
 }
 if ( process.argv.length === 5 ) {
-    const name = process.argv[3]
-    const number = process.argv[4]
-    const person = new Person({
+  const name = process.argv[3]
+  const number = process.argv[4]
+  const person = new Person({
     name: name,
     number: number
   })
+  // eslint-disable-next-line no-unused-vars
   person.save().then(response => {
-    console.log(`added ${name} number ${number} to phonebook`);
-    mongoose.connection.close();
+    console.log(`added ${name} number ${number} to phonebook`)
+    mongoose.connection.close()
   })
 }
